@@ -73,9 +73,8 @@ class FileStorage:
         """retrieves one object"""
         if cls is None or id is None:
             return None
-        key = "{}.{}".format(cls, id)
-        if key in self.__objects.keys():
-            return self.__objects[key]
+        key = "{}.{}".format(cls.__name__, id)
+        return self.__objects[key]
 
     def count(self, cls=None):
         """count the number of objects"""
