@@ -79,7 +79,7 @@ class DBStorage:
         """retrieves one object"""
         if cls is None or id is None:
             return None
-        objs = self.__session.query(classes[cls]).all()
+        objs = self.__session.query(cls).all()
         for obj in objs:
             if obj.id == id:
                 return obj
