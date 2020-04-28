@@ -74,7 +74,10 @@ class FileStorage:
         if cls is None or id is None:
             return None
         key = "{}.{}".format(cls.__name__, id)
-        return self.__objects[key]
+        try:
+            return self.__objects[key]
+        except:
+            return None
 
     def count(self, cls=None):
         """count the number of objects"""
