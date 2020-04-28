@@ -18,13 +18,13 @@ def status():
     return jsonify({"status": "OK"})
 
 
-@app_views.route("/api/v1/stats")
+@app_views.route("/stats")
 def stats():
     """ Route returns count of each obj """
     classes = [Amenity, City, Place, Review, State, User]
     total = []
-    for class in classes:
-        total.append(storage.count(class))
+    for cls in classes:
+        total.append(storage.count(cls))
     return jsonify(amenities=total[0], cities=total[1],
                    places=total[2], reviews=total[3],
                    states=total[4], users=total[5])
