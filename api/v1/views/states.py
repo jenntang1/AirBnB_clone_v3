@@ -2,13 +2,13 @@
 """ Creates a view for State objects """
 
 from api.v1.views import app_views
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, make_response
 from models import storage
 from models.state import State
 
 
 @app_views.route("/states", methods=["GET", "POST"], strict_slashes=False)
-def states():
+def states(self):
     """ Route retrieves list of all State objects or creates State """
     if request.method is "GET":
         states = storage.all(State)
@@ -17,13 +17,14 @@ def states():
             new_list.append(values.to_dict())
         return jsonify(new_list)
     else:
-        response = request.get_json
-        print(response)
-        if response is None:
+        data = request.get_json()
+        if data is None:
             return "Not a JSON", 400
-        if response.get("name") is None:
+        if data.get("name") is None:
             return "Missing name", 400
-        return State(response), 201
+        obj = State(data)
+        print(obj)
+        return jsonify(obj.to_dict()), 201
 
 
 @app_views.route("/states/<state_id>", methods=["GET"], strict_slashes=False)
@@ -44,5 +45,3 @@ def states_id_delete(state_id):
     storage.delete(state)
     storage.save()
     return jsonify({}), 200
-
-
