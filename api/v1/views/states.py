@@ -7,13 +7,14 @@ from models import storage
 from models.state import State
 
 
-@app_views.route("/states", methods=["GET"])
+@app_views.route("/states", methods=["GET"], strict_slashes=False)
 def states():
     """ Route retrieves list of all State objects """
     states = storage.all(State)
-    print(states)
-    return states
+    new_list = []
+    for values in states.values():
+        new_list.append(values.to_dict())
+    return jsonify(new_list)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+
