@@ -8,9 +8,9 @@ from models.state import State
 
 
 @app_views.route("/states", methods=["GET", "POST"], strict_slashes=False)
-def states(self):
+def states():
     """ Route retrieves list of all State objects or creates State """
-    if request.method is "GET":
+    if request.method == "GET":
         states = storage.all(State)
         new_list = []
         for values in states.values():
@@ -22,9 +22,7 @@ def states(self):
             return "Not a JSON", 400
         if data.get("name") is None:
             return "Missing name", 400
-        obj = State(data)
-        print(obj)
-        return jsonify(obj.to_dict()), 201
+        return jsonify(State(data).to_dict()), 201
 
 
 @app_views.route("/states/<state_id>", methods=["GET"], strict_slashes=False)
@@ -36,7 +34,8 @@ def states_id(state_id):
     return jsonify(state.to_dict())
 
 
-@app_views.route("/states/<state_id>", methods=["DELETE"], strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=["DELETE"],
+                 strict_slashes=False)
 def states_id_delete(state_id):
     """ Route deletes a State object """
     state = storage.get(State, state_id)
