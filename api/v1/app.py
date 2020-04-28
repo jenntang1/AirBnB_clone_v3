@@ -19,7 +19,7 @@ def teardown(self):
 @app.errorhandler(404)
 def error_404(msg):
     """ Returns a json 404 error message """
-    return jsonify({"error": "Not found"})
+    return jsonify({"error": "Not found"}), 404
 
 if __name__ == "__main__":
     app.run(host=getenv("HBNB_API_HOST"),
