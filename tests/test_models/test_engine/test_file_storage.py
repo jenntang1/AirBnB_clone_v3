@@ -76,6 +76,7 @@ test_file_storage.py'])
 
     def test_fs_count(self):
         """Test that counts the number of objects in a class"""
+        self.assertIsInstance(storage.count(), int, "Is a number!")
         self.assertIsInstance(storage.count(State), int, "Is a number!")
 
 
@@ -135,4 +136,5 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
     def test_count(self):
         """Test that counts the number of objects in a class"""
+        self.assertIsInstance(storage.count(), int, "Is a number!")
         self.assertIsInstance(storage.count(State), int, "Is a number!")
