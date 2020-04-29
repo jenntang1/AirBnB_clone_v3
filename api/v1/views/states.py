@@ -23,7 +23,9 @@ def states():
             return "Not a JSON", 400
         if data.get("name") is None:
             return "Missing name", 400
-        obj = State(data)
+        obj = State()
+        for key, value in data.items():
+            setattr(obj, key, value)
         obj.save()
         return jsonify(obj.to_dict()), 201
 
