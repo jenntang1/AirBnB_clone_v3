@@ -6,6 +6,7 @@ Contains the TestDBStorageDocs and TestDBStorage classes
 from datetime import datetime
 import inspect
 import models
+from models import storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -67,6 +68,16 @@ test_db_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
+    def test_db_get(self):
+        """Test that retrieves one object in a session"""
+        first_state_id = list(storage.all(State).values())[0].id
+        one_state = storage.get(State, first_state_id)
+        self.assertNotEqual(one_state, 0, "Created one object.")
+
+    def test_db_count(self):
+        """Test that counts the number of objects in a class"""
+        self.assertIsInstance(storage.count(State), int, "Is a number!")
+
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
@@ -102,7 +113,11 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
         """Test that retrieves one object in a session"""
+        first_state_id = list(storage.all(State).values())[0].id
+        one_state = storage.get(State, first_state_id)
+        self.assertNotEqual(one_state, 0, "Created one object.")
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
         """Test that counts the number of objects in a class"""
+        self.assertIsInstance(storage.count(State), int, "Is a number!")
