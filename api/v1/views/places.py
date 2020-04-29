@@ -30,9 +30,11 @@ def places_id(city_id):
             return "Missing user_id", 400
         if data.get("name") is None:
             return "Missing name", 400
-        user = User()
-        setattr(user, "user_id", data["user_id"])
+        user = storage.get(User, data["user_id"])
+        if user is None:
+            abort(404)
         place = Place()
+        setattr(place, "name", data["name"])
         for key, value in data.items():
             settattr(place, key, value)
         place.save()
