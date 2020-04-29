@@ -27,10 +27,10 @@ def places_id(city_id):
             return "Not a JSON", 400
         if data.get("user_id") is None:
             return "Missing user_id", 400
-        if data.get("name") is None:
-            return "Missing name", 400
         if storage.get(User, data["user_id"]) is None:
             abort(404)
+        if data.get("name") is None:
+            return "Missing name", 400
         place = Place()
         for key, value in data.items():
             settattr(place, key, value)
