@@ -11,22 +11,26 @@ from os import getenv
 
 @app_views.route("/places/<place_id>/amenities", methods=["GET"],
                  strict_slashes=False)
-def place_id(place_id):
+def places_get(place_id):
     """ Route retrieves Amenity objects connected to a Place object """
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
     if request.method == "GET":
         list_amenities = []
-        for item in place.amenities:
-            list_amenities.append(item.to_dict())
+        if getenv("HBNB_TYPE_STORAGE") == "db":
+            for item in place.amenities:
+                list_amenities.append(item.to_dict())
+        else:
+            for item in place.amenity_ids:
+                list_amenities.append(storage.get(Amenity, item).to_dict())
         return jsonify(list_amenities)
 
 
 @app_views.route("/places/<place_id>/amenities/<amenity_id>",
                  methods=["DELETE", "POST"],
                  strict_slashes=False)
-def amenity_id(place_id, amenity_id):
+def amenities_delete_post(place_id, amenity_id):
     """ Route deletes or updates an Amenity object """
     place = storage.get(Place, place_id)
     if place is None:
@@ -52,8 +56,9 @@ def amenity_id(place_id, amenity_id):
         if getenv("HBNB_TYPE_STORAGE") == "db":
             if amenity in place.amenities:
                 return jsonify(amenity.to_dict()), 200
+            place.amenities.append(amenity)
         else:
-            if amenity.id in place.amenity_ids:
+            if amenity_id in place.amenity_ids:
                 return jsonify(amenity.to_dict()), 200
             place.amenity_ids.append(amenity_id)
         setattr(amenity, "place_id", place_id)
