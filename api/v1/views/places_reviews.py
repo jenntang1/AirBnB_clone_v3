@@ -11,7 +11,7 @@ from models.user import User
 
 @app_views.route("/places/<place_id>/reviews", methods=["GET", "POST"],
                  strict_slashes=False)
-def place_reviews():
+def place_reviews(place_id):
     """ Route retrieves list of all Review objects or creates Review """
     place = storage.get(Place, place_id)
     if place is None:
