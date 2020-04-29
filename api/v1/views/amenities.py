@@ -26,7 +26,7 @@ def amenities():
         amenity = Amenity()
         for key, value in data.items():
             setattr(amenity, key, value)
-        """amenity.save()"""
+        amenity.save()
         return jsonify(amenity.to_dict()), 201
 
 
@@ -41,7 +41,7 @@ def amenities_id(amenity_id):
         return jsonify(amenity.to_dict())
     elif request.method == "DELETE":
         storage.delete(amenity)
-        """storage.save()"""
+        storage.save()
         return jsonify({}), 200
     else:
         data = request.get_json()
@@ -50,5 +50,5 @@ def amenities_id(amenity_id):
         for key, value in data.items():
             if key != "id" and key != "created_at" and key != "updated_at":
                 setattr(amenity, key, value)
-        """amenity.save()"""
+        amenity.save()
         return jsonify(amenity.to_dict()), 200
