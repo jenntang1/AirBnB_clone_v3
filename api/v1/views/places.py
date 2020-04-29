@@ -34,7 +34,7 @@ def places_id(city_id):
             return "Missing name", 400
         place = Place()
         for key, value in data.items():
-            settattr(place, key, value)
+            setattr(place, key, value)
         setattr(place, "city_id", city_id)
         place.save()
         return jsonify(place.to_dict()), 201
