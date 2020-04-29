@@ -17,9 +17,10 @@ def places_id(city_id):
     if city is None:
         abort(404)
     if request.method == "GET":
+        places = storage.all(Place)
         list_places = []
-        for item in city.places:
-            list_places.append(item.to_dict())
+        for values in places.values():
+            list_places.append(values.to_dict())
         return jsonify(list_places)
     else:
         data = request.get_json()
@@ -34,6 +35,7 @@ def places_id(city_id):
         place = Place()
         for key, value in data.items():
             settattr(place, key, value)
+        setattr(place, "city_id", city_id)
         place.save()
         return jsonify(place.to_dict()), 201
 
@@ -55,9 +57,9 @@ def places(place_id):
         data = request.get_json()
         if data is None:
             return "Not a JSON", 400
-        key_list = ["id", "created_at", "updated_at"]
+        key_list = ["id", "user_id", "city_id", "created_at", "updated_at"]
         for key, value in data.items():
-            if key != key_list:
+            if key is not key_list:
                 setattr(place, key, value)
         place.save()
         return jsonify(place.to_dict()), 200
