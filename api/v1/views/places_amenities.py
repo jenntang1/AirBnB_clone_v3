@@ -18,7 +18,6 @@ def place_id(place_id):
         abort(404)
     if request.method == "GET":
         list_amenities = []
-        print(place.amenities)
         for item in place.amenities:
             list_amenities.append(item.to_dict())
         return jsonify(list_amenities)
@@ -36,15 +35,29 @@ def amenity_id(place_id, amenity_id):
     if amenity is None:
         abort(404)
     if request.method == "DELETE":
-        if amenity not in place.amenities:
-            abort(404)
-        place.amenities.remove(amenity_id)
+        if getenv("HBNB_TYPE_STORAGE") == "db":
+            if amenity not in place.amenities:
+                abort(404)
+            place.amenities.remove(amenity)
+        else:
+            if amenity.id not in place.amenity_ids:
+                abort(404)
+            place.amenity_ids.remove(amenity.id)
         delattr(amenity, place_id)
+        amenity.save()
+        place.save()
         storage.save()
         return jsonify({}), 200
     else:
-        if amenity in place.amenities:
-            return jsonify(amenity.to_dict()), 200
+        if getenv("HBNB_TYPE_STORAGE") == "db":
+            if amenity in place.amenities:
+                return jsonify(amenity.to_dict()), 200
+        else:
+            if amenity.id in place.amenity_ids:
+                return jsonify(amenity.to_dict()), 200
+            place.amenity_ids.append(amenity_id)
         setattr(amenity, "place_id", place_id)
         amenity.save()
+        place.save()
+        storage.save()
         return jsonify(amenity.to_dict()), 201
