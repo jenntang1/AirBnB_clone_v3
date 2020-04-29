@@ -8,6 +8,7 @@ from models.place import Place
 from models.amenity import Amenity
 from os import getenv
 
+
 @app_views.route("/places/<place_id>/amenities", methods=["GET"],
                  strict_slashes=False)
 def place_id(place_id):
@@ -21,6 +22,7 @@ def place_id(place_id):
         for item in place.amenities:
             list_amenities.append(item.to_dict())
         return jsonify(list_amenities)
+
 
 @app_views.route("/places/<place_id>/amenities/<amenity_id>",
                  methods=["DELETE", "POST"],
