@@ -17,10 +17,9 @@ def places_id(city_id):
     if city is None:
         abort(404)
     if request.method == "GET":
-        places = storage.all(Place)
         list_places = []
-        for values in places.values():
-            list_places.append(values.to_dict())
+        for item in city.places:
+            list_places.append(item.to_dict())
         return jsonify(list_places)
     else:
         data = request.get_json()
