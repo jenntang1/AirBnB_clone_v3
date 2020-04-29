@@ -55,7 +55,7 @@ def places(place_id):
         data = request.get_json()
         if data is None:
             return "Not a JSON", 400
-        key_list = ["id", "user_id", "city_id", "created_at", "updated_at"]
+        key_list = ["id", "created_at", "updated_at"]
         for key, value in data.items():
             if key != key_list:
                 setattr(place, key, value)
