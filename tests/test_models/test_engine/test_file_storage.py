@@ -68,14 +68,12 @@ test_file_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_fs_get(self):
         """Test that retrieves one object in a session"""
         first_state_id = list(storage.all(State).values())[0].id
         one_state = storage.get(State, first_state_id)
         self.assertNotEqual(one_state, 0, "Created one object.")
 
-    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_fs_count(self):
         """Test that counts the number of objects in a class"""
         self.assertIsInstance(storage.count(State), int, "Is a number!")
