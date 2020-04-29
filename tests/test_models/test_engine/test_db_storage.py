@@ -99,18 +99,6 @@ class TestFileStorage(unittest.TestCase):
         """Test that save properly saves objects to file.json"""
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_delete(self):
-        """Test that deletes objects"""
-
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_reload(self):
-        """Test that reloads data in a session"""
-
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_close(self):
-        """Test that closes a session"""
-
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
         """Test that retrieves one object in a session"""
         first_state_id = list(storage.all(State).values())[0].id
