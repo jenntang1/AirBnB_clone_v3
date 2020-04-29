@@ -54,12 +54,26 @@ Classes inherited from Base Model:
 * [state.py](/models/state.py)
 * [user.py](/models/user.py)
 
-#### `/models/engine` directory contains File Storage class that handles JASON serialization and deserialization :
+#### `/models/engine` directory contains File Storage class that handles JASON serialization and deserialization:
 [file_storage.py](/models/engine/file_storage.py) - serializes instances to a JSON file & deserializes back to instances
 * `def all(self)` - returns the dictionary __objects
 * `def new(self, obj)` - sets in __objects the obj with key <obj class name>.id
 * `def save(self)` - serializes __objects to the JSON file (path: __file_path)
-* ` def reload(self)` -  deserializes the JSON file to __objects
+* `def reload(self)` -  deserializes the JSON file to __objects
+* `def get(self, cls, id)` -  returns object based on class and its ID
+* `def count(self, cls=None)` -  returns number of objects in storage for a class
+
+### `/api` directory contains the API:
+[app.py](/api/v1/app.py) - registers the Blueprint to Flask
+* `def teardown(self)` - ends the session
+* `def error_404(msg)` - handles 404 error
+[app.py](/api/v1/views/) - creates views of classes
+* [amenities.py](/api/v1/views/amenities.py)
+* [cities.py](/api/v1/views/cities.py)
+* [index.py](/api/v1/views/index.py)
+* [places.py](/api/v1/views/places.py)
+* [states.py](/api/v1/views/states.py)
+* [users.py](/api/v1/views/users.py)
 
 #### `/tests` directory contains all unit test cases for this project:
 [/test_models/test_base_model.py](/tests/test_models/test_base_model.py) - Contains the TestBaseModel and TestBaseModelDocs classes
