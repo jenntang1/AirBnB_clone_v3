@@ -39,6 +39,7 @@ def amenity_id(place_id, amenity_id):
         if amenity not in place.amenities:
             abort(404)
         place.amenities.remove(amenity_id)
+        delattr(amenity, place_id)
         storage.save()
         return jsonify({}), 200
     else:
