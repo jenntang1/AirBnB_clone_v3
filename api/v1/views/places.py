@@ -33,6 +33,8 @@ def places_id(city_id):
         user = User()
         setattr(user, "user_id", data["user_id"])
         place = Place()
+        for key, value in data.items():
+            settattr(place, key, value)
         place.save()
         return jsonify(place.to_dict()), 201
 
