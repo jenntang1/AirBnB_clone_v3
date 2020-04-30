@@ -81,14 +81,16 @@ def places_search():
     if "states" in data.keys() and len(data["states"]) > 0:
         for state_id in data["states"]:
             state_obj = storage.get(State, state_id)
-            for city_obj in state_obj.cities:
-                for item in city_obj.places:
-                    places_ids.append(item.id)
+            if state_obj:
+                for city_obj in state_obj.cities:
+                    for item in city_obj.places:
+                        places_ids.append(item.id)
     if "cities" in data.keys() and len(data["cities"]) > 0:
         for city_id in data["cities"]:
             city_obj = storage.get(City, city_id)
-            for item in city_obj.places:
-                places_ids.append(item.id)
+            if city_obj:
+                for item in city_obj.places:
+                    places_ids.append(item.id)
     if "amenities" in data.keys() and len(data["amenities"]) > 0:
         for places_obj in places.values():
             amenities_list = []
