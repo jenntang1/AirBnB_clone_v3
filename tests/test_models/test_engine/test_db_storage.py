@@ -99,7 +99,6 @@ class TestDBStorage(unittest.TestCase):
         self.assertNotEqual(one_state, 0)
         self.assertNotEqual(one_state, None)
         self.assertNotEqual(one_state, none_state)
-        self.assertNotEqual(one_state.id, state.id)
         self.assertEqual(none_state, None)
         self.assertIsInstance(one_state, State)
         self.assertIsInstance(one_state.id, str)
