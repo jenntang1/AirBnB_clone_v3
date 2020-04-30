@@ -8,7 +8,6 @@ from models.place import Place
 from models.city import City
 from models.user import User
 from models.state import State
-from os import getenv
 
 
 @app_views.route("/cities/<city_id>/places", methods=["GET", "POST"],
@@ -79,45 +78,24 @@ def places_search():
         for places_obj in places.values():
             places_list.append(places_obj.to_dict())
         return jsonify(places_list)
-    if getenv("HBNB_TYPE_STORAGE") == "db":
-        if "states" in data.keys() and len(data["states"]) > 0:
-            for state_id in data["states"]:
-                state_obj = storage.get(State, state_id)
-                for city_obj in state_obj.cities:
-                    for item in city_obj.places:
-                        places_ids.append(item.id)
-        if "cities" in data.keys() and len(data["cities"]) > 0:
-            for city_id in data["cities"]:
-                city_obj = storage.get(City, city_id)
+    if "states" in data.keys() and len(data["states"]) > 0:
+        for state_id in data["states"]:
+            state_obj = storage.get(State, state_id)
+            for city_obj in state_obj.cities:
                 for item in city_obj.places:
                     places_ids.append(item.id)
-        if "amenities" in data.keys() and len(data["amenities"]) > 0:
-            for places_obj in places.values():
-                amenities_list = []
-                for item in places_obj.amenities:
-                    amenities_list.append(item.id)
-                if all(item in amenities_list for item in data["amenities"]):
-                    places_ids.append(places_obj.id)
-        else:
-            if "states" in data.keys() and len(data["states"]) > 0:
-                for state_id in data["states"]:
-                    state_obj = storage.get(State, state_id)
-                    for city_obj in state_obj.cities():
-                        for place_obj in storage.all(Place):
-                            if place_obj.city_id == city_obj.id:
-                                places_ids.append(place_obj.id)
-            if "cities" in data.keys() and len(data["cities"]) > 0:
-                for city_id in data["cities"]:
-                    for place_obj in storage.all(Place):
-                        if place_obj.city_id == city_id:
-                            places_ids.append(place_obj.id)
-            if "amenities" in data.keys() and len(data["amenities"]) > 0:
-                for places_obj in places.values():
-                    amenities_list = []
-                    for a_obj in places_obj.amenities():
-                        amenities_list.append(a_obj.id)
-                    if all(i in amenities_list for i in data["amenities"]):
-                        places_ids.append(places_obj.id)
+    if "cities" in data.keys() and len(data["cities"]) > 0:
+        for city_id in data["cities"]:
+            city_obj = storage.get(City, city_id)
+            for item in city_obj.places:
+                places_ids.append(item.id)
+    if "amenities" in data.keys() and len(data["amenities"]) > 0:
+        for places_obj in places.values():
+            amenities_list = []
+            for item in places_obj.amenities:
+                amenities_list.append(item.id)
+            if all(item in amenities_list for item in data["amenities"]):
+                places_ids.append(places_obj.id)
     places_ids = list(set(places_ids))
     for ids in places_ids:
         obj_dict = storage.get(Place, ids).to_dict()
