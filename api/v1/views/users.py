@@ -25,9 +25,7 @@ def users():
             return "Missing email", 400
         if data.get("password") is None:
             return "Missing password", 400
-        user = User()
-        for key, value in data.items():
-            setattr(user, key, value)
+        user = User(**data)
         user.save()
         return jsonify(user.to_dict()), 201
 
