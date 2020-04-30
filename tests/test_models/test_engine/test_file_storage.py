@@ -154,4 +154,6 @@ class TestFileStorage(unittest.TestCase):
         self.assertIsInstance(storage.count(), int)
         self.assertIsInstance(storage.count(City), int)
         self.assertEqual(storage.count(), storage.count(None))
-        self.assertEqual(storage.count(City), 1)
+        self.assertGreater(storage.count(City), 1)
+        storage.delete(state)
+        storage.delete(city)
