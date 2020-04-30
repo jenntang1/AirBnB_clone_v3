@@ -91,10 +91,7 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
         """Test that retrieves one object in a session"""
-        try:
-            first_state_id = list(storage.all(State).values())[0].id
-        except:
-            first_state_id = "23452"
+        first_state_id = list(storage.all(State).values())[0].id
         one_state = storage.get(State, first_state_id)
         self.assertNotEqual(one_state, 0)
 
