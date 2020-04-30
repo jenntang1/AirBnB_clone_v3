@@ -92,18 +92,22 @@ def places_search():
                 for item in city_obj.places:
                     places_ids.append(item.id)
     if "amenities" in data.keys() and len(data["amenities"]) > 0:
-        place_objs = []
+        filter_places = []
         if len(places_ids) == 0:
-            place_objs = places.values()
+            filter_places = places.values()
         else:
+            places_ids = list(set(places_ids))
             for ids in places_ids:
-                place_objs.append(storage.get(Place, ids))
-        for places_obj in place_objs:
+                filter_places.append(storage.get(Place, ids))
+        for places_obj in filter_places:
             amenities_list = []
             for item in places_obj.amenities:
                 amenities_list.append(item.id)
             if all(item in amenities_list for item in data["amenities"]):
                 places_ids.append(places_obj.id)
+            else:
+                if places_obj.id in places_ids:
+                    places_ids.remove(places_obj.id)
     places_ids = list(set(places_ids))
     for ids in places_ids:
         obj_dict = storage.get(Place, ids).to_dict()
