@@ -97,6 +97,8 @@ class TestDBStorage(unittest.TestCase):
         one_state = storage.get(State, first_state_id)
         self.assertNotEqual(one_state, 0)
         self.assertEqual(one_state.id, state.id)
+        self.assertIsInstance(one_state, State)
+        self.assertIsInstance(one_state.id, str)
         storage.delete(state)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
