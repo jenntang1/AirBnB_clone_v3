@@ -21,17 +21,11 @@ class User(BaseModel, Base):
         reviews = relationship("Review", backref="user")
     else:
         email = ""
-        __password = ""
+        password = ""
         first_name = ""
         last_name = ""
 
-        def password(self, value):
-            """ Hashes the password """
-            __password = hashlib.md5(kwarg_dict[value].encode()).hexdigest()
-
     def __init__(self, *args, **kwargs):
         """initializes user"""
-        kwarg_dict = kwargs
-        if "password" in kwarg_dict.keys():
-            kwarg_dict["password"] = hashlib.md5(kwarg_dict["password"].encode()).hexdigest()
-        super().__init__(*args, **kwarg_dict)
+        super().__init__(*args, **kwargs)
+        self.password = hashlib.md5(self.password.encode()).hexdigest()
