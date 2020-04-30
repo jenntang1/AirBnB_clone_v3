@@ -130,6 +130,8 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
     def test_get(self):
         """Test that retrieves one object in a session"""
+        state = State(**{"name": "JennAndMichelleLand"})
+        state.save()
         first_state_id = list(storage.all(State).values())[0].id
         one_state = storage.get(State, first_state_id)
         none_state = storage.get(State, "RandomIDString")
@@ -140,10 +142,16 @@ class TestFileStorage(unittest.TestCase):
         self.assertIsInstance(one_state, State)
         self.assertIsInstance(one_state.id, str)
         self.assertIs(none_state, None)
+        storage.delete(state)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
     def test_count(self):
         """Test that counts the number of objects in a class"""
+        state = State(**{"name": "JennAndMichelleLand"})
+        state.save()
+        city = City(**{"state_id": state.id, "name": "JennAndMichelleCity"})
+        city.save()
         self.assertIsInstance(storage.count(), int)
-        self.assertIsInstance(storage.count(State), int)
+        self.assertIsInstance(storage.count(City), int)
         self.assertEqual(storage.count(), storage.count(None))
+        self.assertEqual(storage.count(City), 1)
