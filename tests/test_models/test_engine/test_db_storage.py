@@ -91,9 +91,12 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
         """Test that retrieves one object in a session"""
+        state = State(**{"name": "JennAndMichelleLand"})
+        state.save()
         first_state_id = list(storage.all(State).values())[0].id
         one_state = storage.get(State, first_state_id)
         self.assertNotEqual(one_state, 0)
+        storage.delete(state)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
