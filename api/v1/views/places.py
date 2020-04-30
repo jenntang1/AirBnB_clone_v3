@@ -7,6 +7,7 @@ from models import storage
 from models.place import Place
 from models.city import City
 from models.user import User
+from models.state import State
 
 
 @app_views.route("/cities/<city_id>/places", methods=["GET", "POST"],
@@ -62,3 +63,43 @@ def places(place_id):
                 setattr(place, key, value)
         place.save()
         return jsonify(place.to_dict()), 200
+
+
+@app_views.route("/places_search", methods=["POST"], strict_slashes=False)
+def places_search():
+    """ Route retrieves Place objects depending on JSON """
+    data = request.get_json()
+    if data is None:
+        return "Not a JSON", 400
+    places_ids = []
+    places_list = []
+    places = storage.all(Place)
+    if len(data.keys()) == 0 or all([len(i) == 0 for i in data.values()]):
+        for places_obj in places.values():
+            places_list.append(places_obj.to_dict())
+        return jsonify(places_list)
+    if "states" in data.keys() and len(data["states"]) > 0:
+        for state_id in data["states"]:
+            state_obj = storage.get(State, state_id)
+            for city_obj in state_obj.cities:
+                for item in city_obj.places:
+                    places_ids.append(item.id)
+    if "cities" in data.keys() and len(data["cities"]) > 0:
+        for city_id in data["cities"]:
+            city_obj = storage.get(City, city_id)
+            for item in city_obj.places:
+                places_ids.append(item.id)
+    if "amenities" in data.keys() and len(data["amenities"]) > 0:
+        for places_obj in places.values():
+            amenities_list = []
+            for item in places_obj.amenities:
+                amenities_list.append(item.id)
+            if all(item in amenities_list for item in data["amenities"]):
+                places_ids.append(places_obj.id)
+    places_ids = list(set(places_ids))
+    for ids in places_ids:
+        obj_dict = storage.get(Place, ids).to_dict()
+        if "amenities" in obj_dict:
+            del obj_dict["amenities"]
+        places_list.append(obj_dict)
+    return jsonify(places_list)
