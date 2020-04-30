@@ -2,7 +2,7 @@
 """
 Contains class BaseModel
 """
-
+import inspect
 from datetime import datetime
 import models
 from os import getenv
@@ -68,6 +68,13 @@ class BaseModel:
         new_dict["__class__"] = self.__class__.__name__
         if "_sa_instance_state" in new_dict:
             del new_dict["_sa_instance_state"]
+        frame = inspect.stack()[1]
+        module = inspect.getmodule(frame[0])
+        filename = module.__file__
+        filename = filename.split("/")[-1:]
+        if filename != "file_storage.py":
+            if "password" in new_dict:
+                del new_dict["password"]
         return new_dict
 
     def delete(self):
