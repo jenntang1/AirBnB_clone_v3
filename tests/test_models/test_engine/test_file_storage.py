@@ -78,6 +78,7 @@ test_file_storage.py'])
         """Test that counts the number of objects in a class"""
         self.assertIsInstance(storage.count(), int, "Is a number!")
         self.assertIsInstance(storage.count(State), int, "Is a number!")
+        self.assertIsNone(storage.count(None), "Is None!")
 
 
 class TestFileStorage(unittest.TestCase):
@@ -132,9 +133,12 @@ class TestFileStorage(unittest.TestCase):
         first_state_id = list(storage.all(State).values())[0].id
         one_state = storage.get(State, first_state_id)
         self.assertNotEqual(one_state, 0, "Created one object.")
+        FileStorage._FileStorage__objects = save
 
     @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
     def test_count(self):
         """Test that counts the number of objects in a class"""
         self.assertIsInstance(storage.count(), int, "Is a number!")
         self.assertIsInstance(storage.count(State), int, "Is a number!")
+        self.assertIsNone(storage.count(None), "Is None!")
+        FileStorage._FileStorage__objects = save
